@@ -5,7 +5,7 @@
 class Motor
 {
 public:
-    Motor(int speedPin, int phasePin);
+    Motor(int pin1, int pin2);
     void write(float value);
     Motor& operator=(float value);
     void brake();

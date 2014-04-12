@@ -1,14 +1,14 @@
-#include <Encoder.h>
-#include "RingBuffer.h"
+#include "./Wheel.h"
 
-Encoder encoder(2, 3);
-RingBuffer<int, 5> encoderCounts;
 
-const int loopPeriodMs = 20;
-unsigned int lastMillis = 0;
-float wheelCircumference = 0.1f;
+unsigned int loopFreq = 1000; // Hz
+unsigned int loopPeriodUs = 1000000 / loopFreq;
+const float dt = loopPeriodUs / 1000000.f;
+unsigned int lastMicros = 0;
 
-float velocity(RingBuffer<int, 5>& x);
+// 3 and 4 are motor pins, 0 and 1 are encoder pins
+// Change these to fit actual circuit
+Wheel wheel(3, 4, 0, 1, dt, 0.1f, 12);
 
 
 void setup()
@@ -19,16 +19,11 @@ void setup()
 
 void loop()
 {
-    encoderCounts.push(encoder.read());
-    Serial.println(velocity(encoderCounts) * 100.f);
+    wheel.update()
     
-    while (millis() - lastMillis < loopPeriodMs);
-    lastMillis = millis();
-}
-
-
-float velocity(RingBuffer<int, 5>& x)
-{
-    // Uses a 4th order backward finite difference method the approximate the derivative of a set of data
-    return wheelCircumference * ( 2.08333f * x[0] - 4.f * x[1] + 3.f * x[2] - 1.33333f * x[3] + 0.25f * x[4] ) * loopPeriodMs / 1000.f;
+    Serial.println(wheel.getVelocity() * 100.f);
+    
+    // Limit loop speed to a consistent value to make timing and integration simpler
+    while (micros() - lastMicros < loopPeriodUs);
+    lastMicros = micros();
 }
