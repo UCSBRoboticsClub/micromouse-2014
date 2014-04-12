@@ -9,7 +9,7 @@ Wheel::Wheel(int motPin1, int motPin2, int encPin1, int encPin2, float dt, float
     positionLoop(dt),
     positionMode(false),
     velocitySetpoint(0.f),
-    dt(dt),
+    dt(dt)
 {
     velocity.setCutoffFreq(50.f, dt);
     count2dist = circumference / cpr;
@@ -20,13 +20,13 @@ void Wheel::update()
     int count = encoder.read();
     
     float position = count * count2dist;
-    positionControl = positionLoop.update(position - positionSetpoint);
+    float positionControl = positionLoop.update(position - positionSetpoint);
     
     if (positionMode)
         velocitySetpoint = positionControl;
         
-    velocity.push( (count - lastCount) * count2Dist / dt );
-    velocityControl = velocityLoop.update(velocity - velocitySetpoint);
+    velocity.push( (count - lastCount) * count2dist / dt );
+    float velocityControl = velocityLoop.update(velocity - velocitySetpoint);
     
     motor = velocityControl;
     
@@ -47,7 +47,7 @@ float Wheel::getVelocity()
 }
 
 
-void Wheel::setPosition(float position)
+void Wheel::setPosition(float pos)
 {
     positionSetpoint = pos;
     positionMode = true;

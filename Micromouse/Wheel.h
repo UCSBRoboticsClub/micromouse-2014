@@ -3,7 +3,8 @@
 
 #include <Encoder.h>
 #include "./LowPass.h"
-#include "./Motor.h"
+#include "./drv8833.h"
+#include "./ControlLoop.h"
 
 
 class Wheel

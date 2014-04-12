@@ -1,3 +1,4 @@
+#include <Encoder.h>
 #include "./Wheel.h"
 
 
@@ -19,7 +20,7 @@ void setup()
 
 void loop()
 {
-    wheel.update()
+    wheel.update();
     
     Serial.println(wheel.getVelocity() * 100.f);
     
