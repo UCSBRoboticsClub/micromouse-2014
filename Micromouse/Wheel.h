@@ -20,7 +20,7 @@ public:
     ControlLoop velocityLoop;
     ControlLoop positionLoop;
     
-private:
+//private:
     Motor motor;
     Encoder encoder;
     int lastCount;
