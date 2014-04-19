@@ -11,7 +11,7 @@ Motor::Motor(int pin1, int pin2) : pin1(pin1), pin2(pin2)
     // Set up PWM
     analogWriteFrequency(pin1, 20000);
     analogWriteFrequency(pin2, 20000);
-	analogWriteResolution(16);
+    analogWriteResolution(16);
     analogWrite(pin1, 0);
     analogWrite(pin2, 0);
 }

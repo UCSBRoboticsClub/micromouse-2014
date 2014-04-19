@@ -16,6 +16,7 @@ public:
     float getVelocity();
     void setPosition(float pos);
     float getPosition();
+    void zeroPosition();
     
     ControlLoop velocityLoop;
     ControlLoop positionLoop;

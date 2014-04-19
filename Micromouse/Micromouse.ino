@@ -2,9 +2,9 @@
 #include "./Wheel.h"
 
 
-unsigned int loopFreq = 1000; // Hz
-unsigned int loopPeriodUs = 1000000 / loopFreq;
-const float dt = loopPeriodUs / 1000000.f;
+const unsigned int loopFreq = 100; // Hz
+const unsigned int loopPeriodUs = 1000000 / loopFreq;
+const float dt = 1.f / loopFreq;
 unsigned int lastMicros = 0;
 
 // 3 and 4 are motor pins, 0 and 1 are encoder pins

@@ -58,3 +58,9 @@ float Wheel::getPosition()
 {
     return encoder.read() * count2dist;
 }
+
+
+void Wheel::zeroPosition()
+{
+    encoder.write(0);
+}
