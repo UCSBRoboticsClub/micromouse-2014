@@ -31,6 +31,8 @@ public:
     float positionSetpoint;
     float dt;
     float count2dist;
+    
+    float velocityControl;
 };
 
 #endif // WHEEL_H

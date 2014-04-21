@@ -1,5 +1,7 @@
 #include <Encoder.h>
 #include "./Wheel.h"
+#include "./RingBuffer.h"
+#include "./Button.h"
 
 const int motorRF = 23; // right forward motor pin
 const int motorRR = 22; // right reverse
@@ -20,6 +22,20 @@ unsigned int lastMicros = 0;
 Wheel leftwheel(motorLR, motorLF, encoderL1, encoderL2, dt, 0.1f, 1200);
 Wheel rightwheel(motorRR, motorRF, encoderR1, encoderR2, dt, 0.1f, 1200);
 
+struct DataPoint
+{
+    float positionR;
+    float velocityR;
+    float controlR;
+    float positionL;
+    float velocityL;
+    float controlL;
+};
+
+RingBuffer<DataPoint, 2048> dataLog;
+Button logButton(0, LOW, true);
+
+
 void setup()
 {
     Serial.begin(115200);
@@ -37,7 +53,38 @@ void loop()
     leftwheel.setVelocity(1);
     rightwheel.setVelocity(1);
     
-    Serial.println(leftwheel.getVelocity() * 100.f);
+    if (logButton.pressEdge())
+        dataLog.clear();
+    
+    if (logButton.pressed())
+    {
+        dataLog.push({rightwheel.getPosition(),
+                      rightwheel.getVelocity(),
+                      rightwheel.velocityControl,
+                      leftwheel.getPosition(),
+                      leftwheel.getVelocity(),
+                      leftwheel.velocityControl});
+    }
+              
+    if (Serial.available())
+    {
+        char buffer[256];
+        
+        for (int i = dataLog.size(); i > 0; --i)
+        {
+            snprintf(buffer, 256, "%e,%e,%e,%e,%e,%e",
+                     dataLog[i].positionR,
+                     dataLog[i].velocityR,
+                     dataLog[i].controlR,
+                     dataLog[i].positionL,
+                     dataLog[i].velocityL,
+                     dataLog[i].controlL);
+            Serial.println(buffer);
+        }
+        
+        while (Serial.available())
+            Serial.read();
+    }
     
     // Limit loop speed to a consistent value to make timing and integration simpler
     while (micros() - lastMicros < loopPeriodUs);

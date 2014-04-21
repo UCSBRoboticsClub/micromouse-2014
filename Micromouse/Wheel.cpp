@@ -26,7 +26,7 @@ void Wheel::update()
         velocitySetpoint = positionControl;
         
     velocity.push( (count - lastCount) * count2dist / dt );
-    float velocityControl = velocityLoop.update(velocity - velocitySetpoint);
+    velocityControl = velocityLoop.update(velocity - velocitySetpoint);
     
     motor = velocityControl;
     
